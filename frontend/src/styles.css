@@ -131,6 +131,13 @@ button.ghost {
   color: #667eea;
   border: 1px solid #667eea;
 }
+button.danger {
+  background: #e53e3e;
+}
+
+button.danger:hover {
+  background: #c53030;
+}
 
 button.ghost:hover {
   background: #f0f3ff;

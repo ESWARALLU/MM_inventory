@@ -45,8 +45,18 @@ function adjustStock(id, delta) {
   return { product };
 }
 
+function removeProduct(id) {
+  const index = products.findIndex((item) => item.id === id);
+  if (index === -1) {
+    return { error: 'Product not found' };
+  }
+  const [removed] = products.splice(index, 1);
+  return { product: removed };
+}
+
 module.exports = {
   addProduct,
   getProducts,
   adjustStock,
+  removeProduct,
 };

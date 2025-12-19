@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchProducts, createProduct, increaseStock, decreaseStock } from './api';
+import { fetchProducts, createProduct, increaseStock, decreaseStock, deleteProduct } from './api';
 import AddProduct from './components/AddProduct.jsx';
 import UpdateStock from './components/UpdateStock.jsx';
 import InventoryList from './components/InventoryList.jsx';
@@ -52,6 +52,17 @@ function App() {
     }
   };
 
+  const handleRemoveProduct = async (id) => {
+    try {
+      await deleteProduct(id);
+      setMessage({ type: 'success', text: 'Product removed' });
+      await loadProducts();
+    } catch (error) {
+      const text = error?.response?.data?.message || 'Could not remove product';
+      setMessage({ type: 'error', text });
+    }
+  };
+
   return (
     <div className="page">
       <header className="hero">
@@ -81,7 +92,7 @@ function App() {
             {loading ? 'Refreshing...' : 'Refresh'}
           </button>
         </div>
-        <InventoryList products={products} />
+        <InventoryList products={products} onRemove={handleRemoveProduct} />
       </section>
 
       {message && (

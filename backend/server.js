@@ -26,6 +26,16 @@ app.post('/products', (req, res) => {
   return res.status(201).json({ message: 'Product added', product });
 });
 
+// Remove a product completely
+app.delete('/products/:id', (req, res) => {
+  const { id } = req.params;
+  const { product, error } = store.removeProduct(id);
+  if (error) {
+    return res.status(404).json({ message: error });
+  }
+  return res.json({ message: 'Product removed', product });
+});
+
 app.post('/stock/in', (req, res) => {
   const { id, quantity } = req.body;
   const qty = Number(quantity);
@@ -62,5 +72,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Inventory API running on http://localhost:${PORT}`);
+  console.log(`running on http://localhost:${PORT}`);
 });
