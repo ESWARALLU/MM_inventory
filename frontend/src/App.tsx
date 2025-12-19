@@ -1,19 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ReactNode } from 'react';
 import { fetchProducts, createProduct, increaseStock, decreaseStock, deleteProduct } from './api';
-import AddProduct from './components/AddProduct.jsx';
-import UpdateStock from './components/UpdateStock.jsx';
-import InventoryList from './components/InventoryList.jsx';
+import type { Product, ApiResponse } from './api';
+import AddProduct from './components/AddProduct';
+import UpdateStock from './components/UpdateStock';
+import InventoryList from './components/InventoryList';
 
-function App() {
-  const [products, setProducts] = useState([]);
-  const [message, setMessage] = useState(null);
+interface Message {
+  type: 'success' | 'error';
+  text: string;
+}
+
+function App(): ReactNode {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [message, setMessage] = useState<Message | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadProducts();
   }, []);
 
-  async function loadProducts() {
+  async function loadProducts(): Promise<void> {
     setLoading(true);
     try {
       const list = await fetchProducts();
@@ -25,18 +31,19 @@ function App() {
     }
   }
 
-  const handleAddProduct = async (payload) => {
+  const handleAddProduct = async (payload: Omit<Product, 'quantity'> & { quantity: number }): Promise<void> => {
     try {
       await createProduct(payload);
       setMessage({ type: 'success', text: 'Product added' });
       await loadProducts();
-    } catch (error) {
-      const text = error?.response?.data?.message || 'Could not add product';
+    } catch (error: unknown) {
+      const err = error as any;
+      const text = err?.response?.data?.message || 'Could not add product';
       setMessage({ type: 'error', text });
     }
   };
 
-  const handleStockChange = async (direction, payload) => {
+  const handleStockChange = async (direction: 'in' | 'out', payload: { id: string; quantity: number }): Promise<void> => {
     try {
       if (direction === 'in') {
         await increaseStock(payload);
@@ -46,19 +53,21 @@ function App() {
         setMessage({ type: 'success', text: 'Stock decreased' });
       }
       await loadProducts();
-    } catch (error) {
-      const text = error?.response?.data?.message || 'Could not update stock';
+    } catch (error: unknown) {
+      const err = error as any;
+      const text = err?.response?.data?.message || 'Could not update stock';
       setMessage({ type: 'error', text });
     }
   };
 
-  const handleRemoveProduct = async (id) => {
+  const handleRemoveProduct = async (id: string): Promise<void> => {
     try {
       await deleteProduct(id);
       setMessage({ type: 'success', text: 'Product removed' });
       await loadProducts();
-    } catch (error) {
-      const text = error?.response?.data?.message || 'Could not remove product';
+    } catch (error: unknown) {
+      const err = error as any;
+      const text = err?.response?.data?.message || 'Could not remove product';
       setMessage({ type: 'error', text });
     }
   };

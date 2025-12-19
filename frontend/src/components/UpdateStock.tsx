@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
+import React, { ReactNode } from 'react';
+import type { Product } from '../api';
 
-function UpdateStock({ direction, onSubmit }) {
-  const [form, setForm] = useState({ id: '', quantity: '' });
+interface UpdateStockProps {
+  direction: 'in' | 'out';
+  onSubmit: (payload: { id: string; quantity: number }) => Promise<void>;
+}
 
-  const handleChange = (event) => {
+function UpdateStock({ direction, onSubmit }: UpdateStockProps): ReactNode {
+  const [form, setForm] = React.useState({ id: '', quantity: '' });
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     await onSubmit({ id: form.id, quantity: Number(form.quantity) });
     setForm({ id: '', quantity: '' });

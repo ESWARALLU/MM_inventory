@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
+import type { Product } from '../api';
 
-function InventoryList({ products, onRemove }) {
+interface InventoryListProps {
+  products: Product[];
+  onRemove?: (id: string) => Promise<void>;
+}
+
+function InventoryList({ products, onRemove }: InventoryListProps): ReactNode {
   if (products.length === 0) {
     return <p className="empty">No products in inventory yet.</p>;
   }
