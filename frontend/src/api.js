@@ -23,3 +23,8 @@ export async function decreaseStock(payload) {
   const { data } = await api.post('/stock/out', payload);
   return data;
 }
+
+export async function deleteProduct(id) {
+  const { data } = await api.delete(`/products/${id}`);
+  return data;
+}
