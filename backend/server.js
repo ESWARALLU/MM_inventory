@@ -33,8 +33,10 @@ app.post('/stock/in', (req, res) => {
     return res.status(400).json({ message: 'Quantity must be positive' });
   }
   const { product, error } = store.adjustStock(id, qty);
+  // Map not-found to 404, other validation to 400 for clarity
   if (error) {
-    return res.status(400).json({ message: error });
+    const code = error === 'Product not found' ? 404 : 400;
+    return res.status(code).json({ message: error });
   }
   return res.json({ message: 'Stock increased', product });
 });
@@ -46,8 +48,10 @@ app.post('/stock/out', (req, res) => {
     return res.status(400).json({ message: 'Quantity must be positive' });
   }
   const { product, error } = store.adjustStock(id, -qty);
+  // Map not-found to 404, other validation to 400 for clarity
   if (error) {
-    return res.status(400).json({ message: error });
+    const code = error === 'Product not found' ? 404 : 400;
+    return res.status(code).json({ message: error });
   }
   return res.json({ message: 'Stock decreased', product });
 });
