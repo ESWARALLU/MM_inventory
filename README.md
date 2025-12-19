@@ -16,59 +16,6 @@ Simple inventory app to add products, adjust stock, and track history.
 - Backend: Node.js + Express + TypeScript
 - Storage: JSON file (backend/data.json)
 
-## Project Structure
-```
-MM_inventory/
-├── backend/
-│   ├── data.json
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── src/
-│       ├── server.ts
-│       ├── store.ts
-│       └── types.ts
-└── frontend/
-    ├── package.json
-    ├── tsconfig.json
-    ├── vite.config.ts
-    ├── index.html
-    └── src/
-        ├── api.ts
-        ├── App.tsx
-        ├── main.tsx
-        ├── styles.css
-        ├── components/
-        │   ├── AddProduct.tsx
-        │   ├── InventoryList.tsx
-        │   ├── Navbar.tsx
-        │   ├── Navbar.css
-        │   ├── StockHistory.tsx
-        │   └── UpdateStock.tsx
-        └── pages/
-            ├── InventoryPage.tsx
-            └── ManageProductsPage.tsx
-```
-
-## Getting Started
-
-Prerequisites: Node.js 18 or newer is recommended.
-
-Backend (API server)
-```bash
-cd backend
-npm install
-npm run dev
-```
-The API runs at http://localhost:4000
-
-Frontend (web app)
-```bash
-cd frontend
-npm install
-npm run dev
-```
-The app runs at http://localhost:5173
-
 ## API Reference
 
 Products
@@ -93,5 +40,15 @@ History
 ## Data Persistence
 - All data lives in backend/data.json. Delete this file to reset the app.
 
-## License
-MIT
+## Future Enhancements
+
+This project focuses on core inventory operations. Future versions could add:
+
+**Shipment and Order Fulfillment**
+- Create orders for dealers specifying product IDs and quantities
+- Check stock availability before confirming orders
+- Mark orders as pending, fulfilled, or cancelled
+- Automatically reduce inventory when an order is fulfilled
+- Track which dealer received which shipment and when
+
+This feature is not currently implemented.
