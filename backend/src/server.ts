@@ -79,6 +79,16 @@ app.delete(
   }
 );
 
+app.get('/history', (req: Request, res: Response): void => {
+  const history = store.getStockHistory();
+  res.json({ message: 'History retrieved', history });
+});
+
+app.delete('/history', (req: Request, res: Response): void => {
+  const cleared = store.clearStockHistory();
+  res.json({ message: 'History cleared', cleared });
+});
+
 app.use(
   (
     err: Error,
@@ -92,5 +102,5 @@ app.use(
 );
 
 app.listen(PORT, (): void => {
-  console.log(`Inventory API running on http://localhost:${PORT}`);
+  console.log(`running on http://localhost:${PORT}`);
 });

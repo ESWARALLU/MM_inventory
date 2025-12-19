@@ -1,7 +1,48 @@
 // In-memory data store to keep the demo simple
 import type { Product, StoreResult } from './types';
+import fs from 'fs';
+import path from 'path';
 
-const products: Product[] = [];
+interface StockHistoryRecord {
+  productId: string;
+  change: number;
+  type: 'IN' | 'OUT';
+  timestamp: string;
+}
+
+const DATA_FILE = path.join(process.cwd(), 'data.json');
+
+interface StorageData {
+  products: Product[];
+  stockHistory: StockHistoryRecord[];
+}
+
+let products: Product[] = [];
+let stockHistory: StockHistoryRecord[] = [];
+
+// Load data from file on startup
+function loadData(): void {
+  try {
+    if (fs.existsSync(DATA_FILE)) {
+      const data = fs.readFileSync(DATA_FILE, 'utf-8');
+      const parsed: StorageData = JSON.parse(data);
+      products = parsed.products || [];
+      stockHistory = parsed.stockHistory || [];
+    }
+  } catch (error) {
+    console.error('Error loading data:', error);
+  }
+}
+
+// Save data to file after every change
+function saveData(): void {
+  try {
+    const data: StorageData = { products, stockHistory };
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (error) {
+    console.error('Error saving data:', error);
+  }
+}
 
 function normalizeQuantity(value: unknown): StoreResult<number> {
   const qty = Number(value);
@@ -46,6 +87,18 @@ function addProduct({
     quantity: qty,
   };
   products.push(product);
+
+  // Track initial quantity in stock history
+  if (qty > 0) {
+    stockHistory.push({
+      productId: String(id),
+      change: qty,
+      type: 'IN',
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  saveData();
   return { product };
 }
 
@@ -65,6 +118,17 @@ function adjustStock(id: unknown, delta: number): StoreResult {
   }
 
   product.quantity = next;
+
+  // Record stock movement in history
+  const type = delta > 0 ? 'IN' : 'OUT';
+  stockHistory.push({
+    productId: String(id),
+    change: Math.abs(delta),
+    type,
+    timestamp: new Date().toISOString(),
+  });
+
+  saveData();
   return { product };
 }
 
@@ -74,7 +138,22 @@ function removeProduct(id: unknown): StoreResult {
     return { error: 'Product not found' };
   }
   const [removed] = products.splice(index, 1);
+  saveData();
   return { product: removed };
 }
 
-export { addProduct, getProducts, adjustStock, removeProduct };
+function getStockHistory(): StockHistoryRecord[] {
+  return stockHistory;
+}
+
+function clearStockHistory(): number {
+  const cleared = stockHistory.length;
+  stockHistory = [];
+  saveData();
+  return cleared;
+}
+
+// Initialize on module load
+loadData();
+
+export { addProduct, getProducts, adjustStock, removeProduct, getStockHistory, clearStockHistory };

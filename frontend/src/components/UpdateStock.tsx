@@ -21,13 +21,10 @@ function UpdateStock({ direction, onSubmit }: UpdateStockProps): ReactNode {
   };
 
   const label = direction === 'in' ? 'Stock In' : 'Stock Out';
-  const icon = direction === 'in' ? '📦' : '📤';
 
   return (
     <form className="inline-form" onSubmit={handleSubmit}>
-      <h3>
-        {icon} {label}
-      </h3>
+      <h3>{label}</h3>
       <div className="row">
         <input
           name="id"
