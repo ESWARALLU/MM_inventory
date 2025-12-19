@@ -1,85 +1,97 @@
 # MM Inventory
 
-A simple, clean inventory management system built for a first-time hackathon.
-
-## Tech Stack
-- **Frontend:** React (Vite) + Axios
-- **Backend:** Node.js + Express
-- **Data:** In-memory storage (no database)
+Simple inventory app to add products, adjust stock, and track history.
 
 ## Features
-- ✅ Add products with ID, name, category, and quantity
-- ✅ View all products in a table
-- ✅ Increase stock (Stock In)
-- ✅ Decrease stock (Stock Out)
-- ✅ Real-time validation and error handling
-- ✅ Clean, responsive UI
+- Add products with ID, name, category, and initial quantity
+- View inventory in a table with low-stock highlighting
+- Increase or decrease stock with history tracking
+- Export stock history to CSV, clear history, or export-and-clear
+- Persistent data across restarts (stored in a JSON file)
+- Sort by quantity and filter by category
+- Clean, responsive UI with clear alerts
+
+## Tech Stack
+- Frontend: React 18 + TypeScript, Vite, React Router, Axios, SweetAlert2
+- Backend: Node.js + Express + TypeScript
+- Storage: JSON file (backend/data.json)
 
 ## Project Structure
 ```
 MM_inventory/
 ├── backend/
-│   ├── server.js       # Express API server
-│   ├── store.js        # In-memory data store
-│   └── package.json
+│   ├── data.json
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── src/
+│       ├── server.ts
+│       ├── store.ts
+│       └── types.ts
 └── frontend/
-    ├── src/
-    │   ├── components/
-    │   │   ├── AddProduct.jsx
-    │   │   ├── InventoryList.jsx
-    │   │   └── UpdateStock.jsx
-    │   ├── api.js       # Axios API calls
-    │   ├── App.jsx      # Main app component
-    │   ├── main.jsx     # Entry point
-    │   └── styles.css   # Global styles
+    ├── package.json
+    ├── tsconfig.json
+    ├── vite.config.ts
     ├── index.html
-    ├── vite.config.js
-    └── package.json
+    └── src/
+        ├── api.ts
+        ├── App.tsx
+        ├── main.tsx
+        ├── styles.css
+        ├── components/
+        │   ├── AddProduct.tsx
+        │   ├── InventoryList.tsx
+        │   ├── Navbar.tsx
+        │   ├── Navbar.css
+        │   ├── StockHistory.tsx
+        │   └── UpdateStock.tsx
+        └── pages/
+            ├── InventoryPage.tsx
+            └── ManageProductsPage.tsx
 ```
 
-## Setup Instructions
+## Getting Started
 
-### Backend Setup
+Prerequisites: Node.js 18 or newer is recommended.
+
+Backend (API server)
 ```bash
 cd backend
 npm install
-npm start
+npm run dev
 ```
-Backend runs on `http://localhost:4000`
+The API runs at http://localhost:4000
 
-### Frontend Setup
+Frontend (web app)
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-Frontend runs on `http://localhost:5173`
+The app runs at http://localhost:5173
 
-## API Endpoints
+## API Reference
 
-| Method | Endpoint      | Description          |
-|--------|---------------|----------------------|
-| GET    | /products     | Get all products     |
-| POST   | /products     | Add a new product    |
-| POST   | /stock/in     | Increase stock       |
-| POST   | /stock/out    | Decrease stock       |
+Products
+- GET /products — list all products
+- POST /products — create a product
+- DELETE /products/:id — remove a product
 
-## Demo Instructions
+Stock
+- POST /stock/in — increase stock (body: { id, quantity })
+- POST /stock/out — decrease stock (body: { id, quantity })
 
-1. Start the backend server first
-2. Start the frontend development server
-3. Open browser to `http://localhost:5173`
-4. Add products using the form
-5. Update stock using Stock In/Out buttons
-6. Watch the inventory table update in real-time
+History
+- GET /history — list stock movements
+- DELETE /history — clear all history
 
-## Future Enhancements
-- Database integration (MongoDB/PostgreSQL)
-- User authentication
-- Product search and filtering
-- Analytics dashboard
-- Export inventory to CSV
-- Barcode scanning
+## Usage Tips
+- Add a product with its initial quantity on the Inventory page.
+- Use Manage Products to adjust stock and view history.
+- Use the history toolbar to export CSV, clear, or export-and-clear.
+- Sort by quantity or filter by category above the inventory table.
+
+## Data Persistence
+- All data lives in backend/data.json. Delete this file to reset the app.
 
 ## License
 MIT

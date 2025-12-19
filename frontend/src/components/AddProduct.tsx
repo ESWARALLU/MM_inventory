@@ -52,14 +52,14 @@ function AddProduct({ onSubmit }: AddProductProps): ReactNode {
         />
       </label>
       <label>
-        Quantity
+        Initial Quantity
         <input
           type="number"
           name="quantity"
           value={form.quantity}
           onChange={handleChange}
-          min="1"
-          placeholder="10"
+          min="0"
+          placeholder="0"
           required
         />
       </label>
