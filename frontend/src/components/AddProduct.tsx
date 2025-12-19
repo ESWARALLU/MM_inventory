@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { FormEvent, ChangeEvent, ReactNode } from 'react';
+import type { Product } from '../api';
 
-function AddProduct({ onSubmit }) {
-  const [form, setForm] = useState({ id: '', name: '', category: '', quantity: '' });
+interface AddProductProps {
+  onSubmit: (payload: Omit<Product, 'quantity'> & { quantity: number }) => Promise<void>;
+}
 
-  const handleChange = (event) => {
+function AddProduct({ onSubmit }: AddProductProps): ReactNode {
+  const [form, setForm] = React.useState({ id: '', name: '', category: '', quantity: '' });
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     await onSubmit({ ...form, quantity: Number(form.quantity) });
     setForm({ id: '', name: '', category: '', quantity: '' });
@@ -22,7 +27,7 @@ function AddProduct({ onSubmit }) {
           name="id"
           value={form.id}
           onChange={handleChange}
-          placeholder="sku-001"
+          placeholder="mal-3d"
           required
         />
       </label>
@@ -32,7 +37,7 @@ function AddProduct({ onSubmit }) {
           name="name"
           value={form.name}
           onChange={handleChange}
-          placeholder="Blue T-Shirt"
+          placeholder="3D-mat-au"
           required
         />
       </label>
@@ -42,7 +47,7 @@ function AddProduct({ onSubmit }) {
           name="category"
           value={form.category}
           onChange={handleChange}
-          placeholder="Apparel"
+          placeholder="3D-mats"
           required
         />
       </label>
